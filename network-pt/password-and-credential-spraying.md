@@ -17,41 +17,50 @@ crackmapexec smb <ip> -u 'user' -p 'pass' -M nopac
 
 **SMB**
 
-```
+```bash
 # Host enumeration
 crackmapexec smb $IP/24
 ```
 
-```
+```bash
 # Checking Null Session
-poetry run crackmapexec smb $IP -u '' -p ''
-poetry run crackmapexec smb $IP --pass-pol
-poetry run crackmapexec smb $IP --users
-poetry run crackmapexec smb $IP --groups
+crackmapexec smb $IP -u '' -p ''
+crackmapexec smb $IP --pass-pol
+crackmapexec smb $IP --users
+crackmapexec smb $IP --groups
 ```
 
-```
+```bash
 # Anonymous Logins - random username and blank password
-poetry run crackmapexec smb $IP -u 'a' -p ''
+crackmapexec smb $IP -u 'a' -p ''
+
 # Active Sessions on target
 poetry run crackmapexec smb 192.168.1.0/24 -u 'username' -p 'password' --sessions
+
 # LoggedOn Users
-poetry run crackmapexec smb 192.168.1.0/24 -u 'username' -p 'password' --loggedon-users
+crackmapexec smb 192.168.1.0/24 -u 'username' -p 'password' --loggedon-users
+
 # List shares and permissions
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --shares
+crackmapexec smb $IP -u 'username' -p 'password' --shares
+
 # List Domain Users
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --users
+crackmapexec smb $IP -u 'username' -p 'password' --users
+
 # Enumerate Users with RID brute
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --rid-brute
+crackmapexec smb $IP -u 'username' -p 'password' --rid-brute
+
 # Enumerate Domain groups and localgroups
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --groups
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --local-group
+crackmapexec smb $IP -u 'username' -p 'password' --groups
+crackmapexec smb $IP -u 'username' -p 'password' --local-group
+
 # Passsword Policy
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --rid-brute
+crackmapexec smb $IP -u 'username' -p 'password' --rid-brute
+
 # SMB signing not required
-poetry run crackmapexec smb $IP -u 'username' -p 'password' --gen-relay-list relaylistOutputFilename.txt
+crackmapexec smb $IP -u 'username' -p 'password' --gen-relay-list relaylistOutputFilename.txt
+
 # AV Software installed
-poetry run crackmapexec smb $IP -u 'username' -p 'password' -M enum_av-M enum_av
+crackmapexec smb $IP -u 'username' -p 'password' -M enum_av-M enum_av
 ```
 
 ```

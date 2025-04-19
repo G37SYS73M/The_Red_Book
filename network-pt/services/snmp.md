@@ -1,13 +1,13 @@
 # SNMP
 
-```
+```bash
 sudo onesixtyone -c /usr/share/wordlists/seclists/Discovery/SNMP/snmp.txt $IP
 sudo onesixtyone -c /usr/share/wordlists/seclists/Discovery/SNMP/snmp.txt -i ips.txt
 ```
 
-<figure><img src="../.gitbook/assets/image.png" alt="" width="507"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image.png" alt="" width="507"><figcaption></figcaption></figure>
 
-```
+```bash
 # entire MIB tree
 snmpwalk -c public -v1 -t $IP
 # users
@@ -22,9 +22,9 @@ snmpwalk -c public -v1 $IP 1.3.6.1.2.1.6.13.1.3
 snmpwalk -c public -v1 $IP 1.3.6.1.2.1.25.6.3.1.2
 ```
 
-Copy
 
-```
+
+```bash
 sudo apt-get install snmp-mibs-downloader
 sudo download-mibs
 

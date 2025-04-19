@@ -2,9 +2,7 @@
 
 #### Nmap <a href="#nmap" id="nmap"></a>
 
-Copy
-
-```
+```bash
 # Get an initial idea of the scenario
 sudo nmap -sCV -oN nmap/initial -v $IP
 
