@@ -49,3 +49,9 @@ New-PSSession -ComputerName 192.168.50.73 -Credential $credential
 ```powershell
 ./PsExec64.exe -i  \\FILES04 -u corp\jen -p Nexus123! cmd
 ```
+
+## WinRS
+
+```
+winrs -r:yen-dc cmd
+```
