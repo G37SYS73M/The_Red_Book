@@ -56,7 +56,7 @@ Get-MgRoleManagementDirectoryRoleDefinition | ?{$_.IsBuiltIn -eq $False} | selec
 
 #### Connecting Using AzModule <a href="#connecting-using-azmodule" id="connecting-using-azmodule"></a>
 
-```
+```powershell
 $passwd = ConvertTo-SecureString "V3ryH4rdt0Cr4ckN0OneC@nGu355ForT3stUs3r" -AsPlainText -Force
 
 $creds = New-Object System.Management.Automation.PSCredential ("test@defcorphq.onmicrosoft.com", $passwd)
