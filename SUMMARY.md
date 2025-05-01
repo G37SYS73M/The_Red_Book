@@ -57,4 +57,9 @@
 
 ## Azure Entra ID
 
-* [Page 1](azure-entra-id/page-1.md)
+* [Introduction To Azure EntraID](azure-entra-id/introduction-to-azure-entraid.md)
+* [External Recon](azure-entra-id/external-recon.md)
+* [Initial Access](azure-entra-id/initial-access/README.md)
+  * [Password Spray/Brute-Force](azure-entra-id/initial-access/password-spray-brute-force.md)
+* [Entra ID - Authentication and APIs](azure-entra-id/entra-id-authentication-and-apis.md)
+* [Authenticated Enumeration](azure-entra-id/authenticated-enumeration.md)
