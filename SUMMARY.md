@@ -54,3 +54,7 @@
 * [AD Certificate Service](on-prem-active-directory/ad-certificate-service.md)
 * [MSSQL AD Abuse](on-prem-active-directory/mssql-ad-abuse.md)
 * [Cross Forest Privilege Escalation](on-prem-active-directory/cross-forest-privilege-escalation.md)
+
+## Azure Entra ID
+
+* [Page 1](azure-entra-id/page-1.md)
