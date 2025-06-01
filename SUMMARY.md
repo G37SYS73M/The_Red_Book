@@ -3,7 +3,7 @@
 ## Network PT
 
 * [Nmap](README.md)
-  * [Autorecon](network-pt/nmap/autorecon.md)
+  * [Autorecon](network-pt/readme/autorecon.md)
 * [Services](network-pt/services/README.md)
   * [SMB](network-pt/services/smb.md)
   * [Directory Bruteforce Web](network-pt/services/directory-bruteforce-web.md)
