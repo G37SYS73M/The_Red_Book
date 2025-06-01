@@ -67,3 +67,5 @@
   * [Az PowerShell Module](azure-entra-id/authenticated-enumeration/az-powershell-module.md)
   * [Az CLI](azure-entra-id/authenticated-enumeration/az-cli.md)
 * [Automated Recon](azure-entra-id/automated-recon.md)
+* [Abuses](azure-entra-id/abuses/README.md)
+  * [Page](azure-entra-id/abuses/page.md)
