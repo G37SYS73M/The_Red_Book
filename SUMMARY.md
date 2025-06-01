@@ -69,7 +69,3 @@
 * [Automated Recon](azure-entra-id/automated-recon.md)
 * [Abuses](azure-entra-id/abuses/README.md)
   * [Page](azure-entra-id/abuses/page.md)
-
-## Azure Entra ID
-
-* [Page 1](azure-entra-id-1/page-1.md)
