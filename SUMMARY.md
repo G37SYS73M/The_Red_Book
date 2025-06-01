@@ -68,4 +68,5 @@
   * [Az CLI](azure-entra-id/authenticated-enumeration/az-cli.md)
 * [Automated Recon](azure-entra-id/automated-recon.md)
 * [Abuses](azure-entra-id/abuses/README.md)
-  * [Page](azure-entra-id/abuses/page.md)
+  * [Illicit Consent Grant attack](azure-entra-id/abuses/illicit-consent-grant-attack.md)
+  * [Azure App Service](azure-entra-id/abuses/azure-app-service.md)
