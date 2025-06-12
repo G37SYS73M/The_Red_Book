@@ -105,3 +105,4 @@
       * [SVG Smuggling](red-team-ops/cobalt-strike/initial-access/delivery/svg-smuggling.md)
       * [Cobalt Strike Site Clone](red-team-ops/cobalt-strike/initial-access/delivery/cobalt-strike-site-clone.md)
       * [Host File](red-team-ops/cobalt-strike/initial-access/delivery/host-file.md)
+    * [Kill Chain-1](red-team-ops/cobalt-strike/initial-access/kill-chain-1.md)
