@@ -112,3 +112,4 @@
     * [PowerShell Profile](red-team-ops/cobalt-strike/persistence/powershell-profile.md)
     * [Scheduled Task](red-team-ops/cobalt-strike/persistence/scheduled-task.md)
     * [COM Hijacking](red-team-ops/cobalt-strike/persistence/com-hijacking.md)
+    * [Kill Chain 1](red-team-ops/cobalt-strike/persistence/kill-chain-1.md)
