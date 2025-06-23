@@ -125,3 +125,4 @@
     * [VNC](red-team-ops/cobalt-strike/post-exploitation/vnc.md)
     * [Execution Commands](red-team-ops/cobalt-strike/post-exploitation/execution-commands.md)
     * [Executing Custom Tools](red-team-ops/cobalt-strike/post-exploitation/executing-custom-tools.md)
+    * [Kill Chains](red-team-ops/cobalt-strike/post-exploitation/kill-chains.md)
