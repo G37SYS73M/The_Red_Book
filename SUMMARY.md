@@ -142,3 +142,5 @@
     * [Windows Credential Manager](red-team-ops/cobalt-strike/credential-access/windows-credential-manager.md)
     * [OS Credential Dumping](red-team-ops/cobalt-strike/credential-access/os-credential-dumping.md)
     * [Kerberos Tickets](red-team-ops/cobalt-strike/credential-access/kerberos-tickets.md)
+    * [Kill Chain - Dumping](red-team-ops/cobalt-strike/credential-access/kill-chain-dumping.md)
+    * [Page](red-team-ops/cobalt-strike/credential-access/page.md)
