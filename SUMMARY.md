@@ -150,3 +150,7 @@
     * [Pass the Ticket](red-team-ops/cobalt-strike/user-impersonation/pass-the-ticket.md)
     * [Process Injection](red-team-ops/cobalt-strike/user-impersonation/process-injection.md)
     * [Kill Chain](red-team-ops/cobalt-strike/user-impersonation/kill-chain.md)
+  * [Discovery](red-team-ops/cobalt-strike/discovery/README.md)
+    * [Lightweight Directory Access Protocol](red-team-ops/cobalt-strike/discovery/lightweight-directory-access-protocol.md)
+    * [BOFHound](red-team-ops/cobalt-strike/discovery/bofhound.md)
+    * [Kill Chain](red-team-ops/cobalt-strike/discovery/kill-chain.md)
