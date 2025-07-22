@@ -5,7 +5,7 @@
 1.  Use LDAP to enumerate the domain, users, groups, OUs, and GPOs.
 
     ```beacon-nocolor
-    BeaconTypeCopyldapsearch (|(objectClass=domain)(objectClass=organizationalUnit)(objectClass=groupPolicyContainer)) *,ntsecuritydescriptor
+    ldapsearch (|(objectClass=domain)(objectClass=organizationalUnit)(objectClass=groupPolicyContainer)) *,ntsecuritydescriptor
     ldapsearch (|(samAccountType=805306368)(samAccountType=805306369)(samAccountType=268435456)) --attributes *,ntsecuritydescriptor
     ```
 2. Copy the raw Beacon logs to the Attacker Desktop.
@@ -47,7 +47,7 @@
 1.  Using the gpcpath for the Workstations Admins GPO, download its **GptTmpl.inf** file using Beacon.
 
     ```beacon-nocolor
-    BeaconTypeCopyls \\contoso.com\SysVol\contoso.com\Policies\{2583E34A-BBCE-4061-9972-E2ADAB399BB4}\Machine\Microsoft\Windows NT\SecEdit\
+    ls \\contoso.com\SysVol\contoso.com\Policies\{2583E34A-BBCE-4061-9972-E2ADAB399BB4}\Machine\Microsoft\Windows NT\SecEdit\
     download \\contoso.com\SysVol\contoso.com\Policies\{2583E34A-BBCE-4061-9972-E2ADAB399BB4}\Machine\Microsoft\Windows NT\SecEdit\GptTmpl.inf
     ```
 2.  Sync the file to your Attacker Desktop.
@@ -58,7 +58,7 @@
 4.  Add the custom edges in BloodHound.
 
     ```cypher
-    CypherTypeCopyMATCH (x:Computer{objectid:'S-1-5-21-3926355307-1661546229-813047887-2101'})
+    MATCH (x:Computer{objectid:'S-1-5-21-3926355307-1661546229-813047887-2101'})
     MATCH (y:Group{objectid:'S-1-5-21-3926355307-1661546229-813047887-1106'})
     MERGE (y)-[:AdminTo]->(x)
     ```
