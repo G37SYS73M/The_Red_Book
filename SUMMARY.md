@@ -161,3 +161,5 @@
     * [LOLBAS](red-team-ops/cobalt-strike/lateral-movement/lolbas.md)
     * [Security Logon Types](red-team-ops/cobalt-strike/lateral-movement/security-logon-types.md)
     * [Kill Chains](red-team-ops/cobalt-strike/lateral-movement/kill-chains.md)
+  * [Pivoting](red-team-ops/cobalt-strike/pivoting/README.md)
+    * [SOCKS](red-team-ops/cobalt-strike/pivoting/socks.md)
