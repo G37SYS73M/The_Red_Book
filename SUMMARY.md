@@ -163,3 +163,4 @@
     * [Kill Chains](red-team-ops/cobalt-strike/lateral-movement/kill-chains.md)
   * [Pivoting](red-team-ops/cobalt-strike/pivoting/README.md)
     * [SOCKS](red-team-ops/cobalt-strike/pivoting/socks.md)
+    * [Reverse Port Forwards](red-team-ops/cobalt-strike/pivoting/reverse-port-forwards.md)
