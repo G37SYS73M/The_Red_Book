@@ -164,3 +164,7 @@
   * [Pivoting](red-team-ops/cobalt-strike/pivoting/README.md)
     * [SOCKS](red-team-ops/cobalt-strike/pivoting/socks.md)
     * [Reverse Port Forwards](red-team-ops/cobalt-strike/pivoting/reverse-port-forwards.md)
+    * [Kill Chain](red-team-ops/cobalt-strike/pivoting/kill-chain.md)
+  * [Kerberos](red-team-ops/cobalt-strike/kerberos/README.md)
+    * [Unconstrained Delegation](red-team-ops/cobalt-strike/kerberos/unconstrained-delegation/README.md)
+      * [Exploitation](red-team-ops/cobalt-strike/kerberos/unconstrained-delegation/exploitation.md)
