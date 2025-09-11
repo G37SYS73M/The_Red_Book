@@ -168,3 +168,5 @@
   * [Kerberos](red-team-ops/cobalt-strike/kerberos/README.md)
     * [Unconstrained Delegation](red-team-ops/cobalt-strike/kerberos/unconstrained-delegation/README.md)
       * [Exploitation](red-team-ops/cobalt-strike/kerberos/unconstrained-delegation/exploitation.md)
+    * [Constrained Delegation](red-team-ops/cobalt-strike/kerberos/constrained-delegation/README.md)
+      * [Attack](red-team-ops/cobalt-strike/kerberos/constrained-delegation/attack.md)
