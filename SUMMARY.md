@@ -170,3 +170,6 @@
       * [Exploitation](red-team-ops/cobalt-strike/kerberos/unconstrained-delegation/exploitation.md)
     * [Constrained Delegation](red-team-ops/cobalt-strike/kerberos/constrained-delegation/README.md)
       * [Attack](red-team-ops/cobalt-strike/kerberos/constrained-delegation/attack.md)
+    * [Service Name Substitution](red-team-ops/cobalt-strike/kerberos/service-name-substitution/README.md)
+      * [Attack](red-team-ops/cobalt-strike/kerberos/service-name-substitution/attack.md)
+    * [S4U2self Computer Takeover](red-team-ops/cobalt-strike/kerberos/s4u2self-computer-takeover.md)
