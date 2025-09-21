@@ -92,7 +92,7 @@ In summary, **Entra ID** is about identity and access, while **ARM** is about ma
 
 **Key Differences Between Azure RBAC and Entra ID Roles:**
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 **Common Entra ID Roles:**
 

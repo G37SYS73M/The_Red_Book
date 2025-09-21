@@ -5,7 +5,7 @@ sudo onesixtyone -c /usr/share/wordlists/seclists/Discovery/SNMP/snmp.txt $IP
 sudo onesixtyone -c /usr/share/wordlists/seclists/Discovery/SNMP/snmp.txt -i ips.txt
 ```
 
-<figure><img src="../../.gitbook/assets/image.png" alt="" width="507"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1).png" alt="" width="507"><figcaption></figcaption></figure>
 
 ```bash
 # entire MIB tree
