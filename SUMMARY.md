@@ -200,4 +200,5 @@
     * [Resource Kit](red-team-ops/cobalt-strike/defence-evasion/resource-kit.md)
     * [Beacon Memory](red-team-ops/cobalt-strike/defence-evasion/beacon-memory.md)
     * [Post-ex Fork & Run](red-team-ops/cobalt-strike/defence-evasion/post-ex-fork-and-run.md)
+    * [AV Evasion Attack](red-team-ops/cobalt-strike/defence-evasion/av-evasion-attack.md)
     * [AppLocker](red-team-ops/cobalt-strike/defence-evasion/applocker.md)
